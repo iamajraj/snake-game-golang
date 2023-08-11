@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -58,9 +59,14 @@ func draw() {
 }
 
 func clearScreen() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+	switch runtime.GOOS {
+	case "windows":
+		cmd := exec.Command("cmd", "/c", "cls")
+		cmd.Stdout = os.Stdout
+		cmd.Run()
+	default:
+		fmt.Print("\033[H\033[2J") // ANSI escape code to clear screen
+	}
 }
 
 func containsPoint(points []Point, p Point) bool {
