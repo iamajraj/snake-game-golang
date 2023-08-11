@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"os/exec"
+	"time"
 )
 
 const (
@@ -62,14 +64,44 @@ func clearScreen() {
 }
 
 func containsPoint(points []Point, p Point) bool {
-	return true
+	for _, point := range points {
+		if point == p {
+			return true
+		}
+	}
+	return false
 }
 
 func placeFood() {
+	rand.Seed(time.Now().UnixNano())
+	food = Point{rand.Intn(width), rand.Intn(height)}
 }
 
 func update() {
+	newHead := Point{
+		x: snake.head.x + snake.direction.x,
+		y: snake.head.y + snake.direction.y,
+	}
 
+	snake.body = append([]Point{snake.head}, snake.body...)
+
+	if newHead == food {
+		placeFood()
+	} else {
+		snake.body = snake.body[:len(snake.body)-1]
+	}
+
+	snake.head = newHead
+
+	if snake.head.x < 0 || snake.head.x >= width || snake.head.y < 0 || snake.head.y >= height {
+		gameOver = true
+		return
+	}
+
+	if containsPoint(snake.body, snake.head) {
+		gameOver = true
+		return
+	}
 }
 
 func handleInput() {
