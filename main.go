@@ -37,12 +37,28 @@ func setup() {
 }
 
 func draw() {
+	clearScreen()
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			if x == snake.head.x && y == snake.head.y {
+				fmt.Print("■") // Snake head
+			} else if containsPoint(snake.body, Point{x, y}) {
+				fmt.Print("o") // Snake body
+			} else if x == food.x && y == food.y {
+				fmt.Print("🍏") // Food emoji
+			} else {
+				fmt.Print(".")
+			}
+		}
+		fmt.Println()
+	}
 }
 
 func clearScreen() {
 }
 
 func containsPoint(points []Point, p Point) bool {
+	return true
 }
 
 func placeFood() {
