@@ -3,10 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math/rand"
 	"os"
-	"os/exec"
-	"time"
 )
 
 const (
@@ -40,68 +37,19 @@ func setup() {
 }
 
 func draw() {
-	clearScreen()
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			if x == snake.head.x && y == snake.head.y {
-				fmt.Print("■") // Snake head
-			} else if containsPoint(snake.body, Point{x, y}) {
-				fmt.Print("o") // Snake body
-			} else if x == food.x && y == food.y {
-				fmt.Print("🍏") // Food emoji
-			} else {
-				fmt.Print(".")
-			}
-		}
-		fmt.Println()
-	}
 }
 
 func clearScreen() {
-	cmd := exec.Command("clear")
-	cmd.Stdout = os.Stdout
-	cmd.Run()
 }
 
 func containsPoint(points []Point, p Point) bool {
-	for _, point := range points {
-		if point == p {
-			return true
-		}
-	}
-	return false
 }
 
 func placeFood() {
-	rand.Seed(time.Now().UnixNano())
-	food = Point{rand.Intn(width), rand.Intn(height)}
 }
 
 func update() {
-	newHead := Point{
-		x: snake.head.x + snake.direction.x,
-		y: snake.head.y + snake.direction.y,
-	}
 
-	snake.body = append([]Point{snake.head}, snake.body...)
-
-	if newHead == food {
-		placeFood()
-	} else {
-		snake.body = snake.body[:len(snake.body)-1]
-	}
-
-	snake.head = newHead
-
-	if snake.head.x < 0 || snake.head.x >= width || snake.head.y < 0 || snake.head.y >= height {
-		gameOver = true
-		return
-	}
-
-	if containsPoint(snake.body, snake.head) {
-		gameOver = true
-		return
-	}
 }
 
 func handleInput() {
